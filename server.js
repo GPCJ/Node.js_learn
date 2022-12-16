@@ -119,7 +119,22 @@ MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mong
     // app.get('/fail', function(req, res){
     //     res.redirect('/login')
     // })
+
+    app.get('/mypage', 로그인확인, function(req, res){
+        res.render('my_page.ejs')
+    })
     
+    function 로그인확인(req, res, next){
+        if(req.user){
+            next()
+        } else {
+            res.send('로그인 해주세요')
+        }
+    }
+
+
+
+
     passport.use(new LocalStrategy({
         usernameField: 'ID',    // ejs에서 name 속성에 넣은 이름
         passwordField: 'PW',    // ejs에서 name 속성에 넣은 이름
