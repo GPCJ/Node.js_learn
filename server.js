@@ -84,14 +84,16 @@ MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mong
 
 
     app.get('/', function(req, res){              // req(request) = 요청, res(response) = 응답
-        res.render('index.ejs')  // index.ejs파일을 띄운다, index.ejs로 메인 페이지로 한다 여기서 이후에 만들 모든 페이지로 이동하게 만들 예정
+        res.render('Home.ejs')  // Home.ejs파일을 띄운다, Home.ejs로 메인 페이지로 한다 여기서 이후에 만들 모든 페이지로 이동하게 만들 예정
     });
 
     app.get('/write', function(req, res){         // /write라는 URL를 추가해서 접속하면 밑에 있는 코드를 실행
         res.render('write.ejs')  // write.ejs파일을 띄운다.
     });
 
-    // session방식 로그인
+
+
+    // session방식 로그인 구현
     const passport = require('passport');
     const LocalStrategy = require('passport-local').Strategy;
     const session = require('express-session');
@@ -100,38 +102,54 @@ MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mong
     app.use(passport.initialize());
     app.use(passport.session()); 
 
+
+    // 로그인 처리
+    // get요청
     app.get('/login', function(req, res){
         res.render('login.ejs')
     })
 
+    // post요청
     app.post('/login', passport.authenticate('local', {
-        failureRedirect : '/fail'
+        failureRedirect : '/fail'   // 로그인 실패
     }), function(req, res){
-        res.redirect('/')
+        res.redirect('/')           // 로그인 성공
     })
 
-
+    // app.get('/fail', function(req, res){
+    //     res.redirect('/login')
+    // })
+    
     passport.use(new LocalStrategy({
-        usernameField: 'id',
-        passwordField: 'pw',
+        usernameField: 'ID',    // ejs에서 name 속성에 넣은 이름
+        passwordField: 'PW',    // ejs에서 name 속성에 넣은 이름
         session: true,
-        passReqToCallback: false,
+        passReqToCallback: false,   // 아이디, 비번 이외의 정보를 검증하고 싶을 때 쓰는거임
+
+        // ID, PW 인증 코드
       }, function (입력한아이디, 입력한비번, done) {
         //console.log(입력한아이디, 입력한비번);
-        db.collection('login').findOne({ id: 입력한아이디 }, function (에러, 결과) {
-          if (에러) return done(에러)
+        db.collection('login').findOne({ id: 입력한아이디 }, function (error, 결과) {
+          if (error) return done(error)
       
-          if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
+          if (!결과) return done(null, false, { message: '존재하지않는 아이디입니다.' })
           if (입력한비번 == 결과.pw) {
             return done(null, 결과)
           } else {
-            return done(null, false, { message: '비번틀렸어요' })
+            return done(null, false, { message: '비밀번호가 틀렸습니다.' })
           }
         })
       }));
 
-
-
+      // ID를 이용해 세션을 저장시키는 코드
+      passport.serializeUser(function (user, done) {
+        done(null, user.id)
+      });
+      
+      // 데이터를 가진 사람을 DB에서 찾아주는 코드
+      passport.deserializeUser(function (아이디, done) {
+        done(null, {})
+      }); 
 
 
 
