@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -10,14 +12,14 @@ app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 
 const MongoClient = require('mongodb').MongoClient;
-MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mongodb.net/?retryWrites=true&w=majority', function(error, client){
-
-    app.listen(8080, function() {
-        console.log('listening on 8080');
-    });  
-
-    db = client.db('Node_learn');
-
+// .env 적용
+var db;
+MongoClient.connect(process.env.DB_URL, function(err, client){
+if (err) return console.log(err)
+db = client.db('Node_learn');
+app.listen(process.env.PORT, function() {
+    console.log('listening on 8080')
+})
     // 게시물 
     app.post('/add', function(req, res){
         res.redirect('/list')
@@ -116,10 +118,11 @@ MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mong
         res.redirect('/')           // 로그인 성공
     })
 
-    // app.get('/fail', function(req, res){
-    //     res.redirect('/login')
-    // })
+    app.get('/fail', function(req, res){
+        res.redirect('/login')
+    })
 
+    // 마이페이지 띄워주기
     app.get('/mypage', 로그인확인, function(req, res){
         res.render('my_page.ejs')
     })
@@ -167,9 +170,14 @@ MongoClient.connect('mongodb+srv://jin7602:Gp*dPN-_h-.zw5e@cluster0.pzk4rsc.mong
       }); 
 
 
-
-
-
+      // 검색 키워드 처리
+      app.get('/search', function(req, res){
+        console.log(req.query.value)  // req 즉 요청 정보에서 query string으로 보낸 데이터만 콘솔에 출력 여기서 .value이런식으로 쓰면 데이터 이름도 걸러서 그냥 단지 데이터만 가져올 수 있음
+        db.collection('post').find({할일:req.query.value}).toArray(function(error, 결과){   // post테이블 안에서 할일 필드에 있는 값중에 req.query.value에 해당하는 게시물들을 가져옴
+            console.log(결과)
+            res.render('search_result.ejs', { result : 결과 });             
+        })
+      })
 
 
 

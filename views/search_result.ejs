@@ -35,12 +35,12 @@
     </script>    
 
       <ul class="list-group">
-        <% for (var i = 0; i < posts.length; i++){ %>
+        <% for (var i = 0; i < result.length; i++){ %>
           <li class="list-group-item">
-            <h4>할일 : <a href="/detail/<%= posts[i]._id %>" class="work_list"><%= posts[i].할일 %></a></h4>
-            <P>할일 작성일짜 : <%= posts[i].날짜 %></P>
-            <button class="btn btn-secondary edit" data-id="<%= posts[i]._id %>" onclick = "location.href = '/edit/<%= posts[i]._id %>' ">수정</button>
-            <button class="btn btn-danger delete" data-id="<%= posts[i]._id %>">삭제</button>
+            <h4>할일 : <a href="/detail/<%= result[i]._id %>" class="work_list"><%= result[i].할일 %></a></h4>
+            <P>할일 작성일짜 : <%= result[i].날짜 %></P>
+            <button class="btn btn-secondary edit" data-id="<%= result[i]._id %>" onclick = "location.href = '/edit/<%= result[i]._id %>' ">수정</button>
+            <button class="btn btn-danger delete" data-id="<%= result[i]._id %>">삭제</button>
           </li>
         <% } %>
       </ul>
