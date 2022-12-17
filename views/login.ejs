@@ -8,23 +8,24 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Home</title>
+    <title>로그인</title>
   </head>
   <body>
 
     <%- include('navbar.html') %>
 
     <!-- 입력 -->
-    <div class="container m-3 mt-4">
+    <div class="container">
       <!-- POST방식으로 /login요청을 서버에 보냄 -->
       <form action="/login" method="POST">
           <div class="input mb-3 p">
+              <h4 class="ml-2 my-3 text-center">로그인</h4>
               <label>ID</label>
               <input type="text" class="form-control" name="ID">
           </div>
           <div class="input mb-3">
               <label>PW</label>
-              <input type="password" class="form-control" name="PW">
+              <input type="text" class="form-control" name="PW">
           </div>
           
           <button type="submit" class="btn btn-danger">로그인</button>

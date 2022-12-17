@@ -122,7 +122,8 @@ app.listen(process.env.PORT, function() {
         res.redirect('/login')
     })
 
-    // 마이페이지 띄워주기
+
+    // 마이페이지
     app.get('/mypage', 로그인확인, function(req, res){
         res.render('my_page.ejs')
     })
@@ -168,6 +169,27 @@ app.listen(process.env.PORT, function() {
       passport.deserializeUser(function (아이디, done) {
         done(null, {})
       }); 
+
+      // 회원가입
+      app.get('/register', function(req, res){
+          res.render('register.ejs')
+      })
+
+      app.post('/register', function(req, res){
+        db.collection('login').findOne( {id : req.body.ID, pw : req.body.PW}, function(error, 결과){
+            if(!req.body.ID || !req.body.PW){
+                res.send('값을 입력해주세요.')
+            }
+            else if(결과){
+                res.send('이미 존재하는 ID입니다.')
+            }
+            else{
+                db.collection('login').insertOne( { id : req.body.ID, pw : req.body.PW }, function(error, 결과){
+                    res.redirect('/')  
+                })
+            }
+        })
+      })
 
 
       // 검색 키워드 처리
