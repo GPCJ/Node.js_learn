@@ -173,9 +173,9 @@ app.listen(process.env.PORT, function() {
       // 검색 키워드 처리
       app.get('/search', function(req, res){
         console.log(req.query.value)  // req 즉 요청 정보에서 query string으로 보낸 데이터만 콘솔에 출력 여기서 .value이런식으로 쓰면 데이터 이름도 걸러서 그냥 단지 데이터만 가져올 수 있음
-        db.collection('post').find({할일:req.query.value}).toArray(function(error, 결과){   // post테이블 안에서 할일 필드에 있는 값중에 req.query.value에 해당하는 게시물들을 가져옴
+        db.collection('post').find( { $text: { $search: req.query.value } } ).toArray(function(error, 결과){   // post테이블 안에서 할일 필드에 있는 값중에 req.query.value에 해당하는 게시물들을 가져옴
             console.log(결과)
-            res.render('search_result.ejs', { result : 결과 });             
+            res.render('work_search.ejs', { result : 결과 });             
         })
       })
 

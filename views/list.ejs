@@ -22,8 +22,8 @@
 
     <!-- 검색창 -->
     <div class="container input-group mb-2">
-      <input class="form-control" id="search-keyword" type="search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit" id="search">Search</button>
+      <input class="form-control" id="search-keyword" type="search" aria-label="Search" onkeypress="if( event.keyCode == 13 ){enterKey();}">
+      <button class="btn btn-success" type="submit" id="search">Search</button>
     </div>
 
     <script>
@@ -31,6 +31,10 @@
         var search_keyword = $('#search-keyword').val()        
         window.location.replace('/search?value=' + search_keyword)    // search id를 가진 요소를 누르면 replace 즉 갈아치움 괄호 안에 있는 정보들로
       })
+      function enterKey(){
+        var search_keyword = $('#search-keyword').val()        
+        window.location.replace('/search?value=' + search_keyword)    // search id를 가진 요소를 누르면 replace 즉 갈아치움 괄호 안에 있는 정보들로
+      }
 
     </script>    
 
@@ -38,7 +42,7 @@
         <% for (var i = 0; i < posts.length; i++){ %>
           <li class="list-group-item">
             <h4>할일 : <a href="/detail/<%= posts[i]._id %>" class="work_list"><%= posts[i].할일 %></a></h4>
-            <P>할일 작성일짜 : <%= posts[i].날짜 %></P>
+            <P>할일 작성날짜 : <%= posts[i].날짜 %></P>
             <button class="btn btn-secondary edit" data-id="<%= posts[i]._id %>" onclick = "location.href = '/edit/<%= posts[i]._id %>' ">수정</button>
             <button class="btn btn-danger delete" data-id="<%= posts[i]._id %>">삭제</button>
           </li>

@@ -22,8 +22,8 @@
 
     <!-- 검색창 -->
     <div class="container input-group mb-2">
-      <input class="form-control" id="search-keyword" type="search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit" id="search">Search</button>
+      <input class="form-control" id="search-keyword" type="search" aria-label="Search" onkeypress="if( event.keyCode == 13 ){enterKey();}">
+      <button class="btn btn-success" type="submit" id="search">Search</button>
     </div>
 
     <script>
@@ -32,13 +32,18 @@
         window.location.replace('/search?value=' + search_keyword)    // search id를 가진 요소를 누르면 replace 즉 갈아치움 괄호 안에 있는 정보들로
       })
 
+      // var 자료 = { 이름1 : '값1', 이름2 : '값2' }
+      // $param(자료) //이름1=값1&이름2=값2 이거가 남음
+
+      // $(폼태그).serialize()
+
     </script>    
 
       <ul class="list-group">
         <% for (var i = 0; i < result.length; i++){ %>
           <li class="list-group-item">
             <h4>할일 : <a href="/detail/<%= result[i]._id %>" class="work_list"><%= result[i].할일 %></a></h4>
-            <P>할일 작성일짜 : <%= result[i].날짜 %></P>
+            <P>할일 작성날짜 : <%= result[i].날짜 %></P>
             <button class="btn btn-secondary edit" data-id="<%= result[i]._id %>" onclick = "location.href = '/edit/<%= result[i]._id %>' ">수정</button>
             <button class="btn btn-danger delete" data-id="<%= result[i]._id %>">삭제</button>
           </li>
