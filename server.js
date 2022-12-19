@@ -154,12 +154,12 @@ app.listen(process.env.PORT, function() {
 
     // 삭제 기능 - start
     app.delete('/delete', function(req, res){
-        req.body._id = parseInt(req.body._id)
+        req.body._id = parseInt(req.body._id)   // Int형으로 변환해서 저장
 
         req.user.nick_name
         var 삭제할데이터 = { nick_name : req.body.nick_name, 작성자 : req.user.nick_name}
 
-        // 요청.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주어야함
+        // req.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주어야함
         db.collection('post').deleteOne(삭제할데이터, function(error, 결과){
             console.log('삭제완료');
         });
@@ -223,7 +223,10 @@ app.listen(process.env.PORT, function() {
     })
 
     
+app.use('/shop', require('./routes/shop.js'))
 
+app.use('/board', require('./routes/board.js'))
+    
 
 
 
