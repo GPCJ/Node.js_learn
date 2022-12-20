@@ -1,6 +1,6 @@
 var router = require('express').Router(); // express라이브러리에서 Router()함수를 불러와 쓴다는 뜻
 
-function login_confrim(req, res, next){
+function login_confrim_alert(req, res, next){
     if(req.user){
         next()
     } else {
@@ -8,11 +8,11 @@ function login_confrim(req, res, next){
     }
 }
 
-router.get('/sports', login_confrim, function(req, res){
+router.get('/sports', login_confrim_alert, function(req, res){
     res.send('스포츠 게시판')
 })
 
-router.get('/game', login_confrim, function(req, res){
+router.get('/game', login_confrim_alert, function(req, res){
     res.send('게임 게시판')
 })
 

@@ -33,11 +33,6 @@ app.listen(process.env.PORT, function() {
         res.render('Home.ejs')  // Home.ejs파일을 띄운다, Home.ejs로 메인 페이지로 한다 여기서 이후에 만들 모든 페이지로 이동하게 만들 예정
     });
 
-    app.get('/write', function(req, res){         // /write라는 URL를 추가해서 접속하면 밑에 있는 코드를 실행
-        res.render('write.ejs')  // write.ejs파일을 띄운다.
-    });
-
-
 
     // session방식 로그인 구현
     const passport = require('passport');
@@ -59,11 +54,12 @@ app.listen(process.env.PORT, function() {
     app.post('/login', passport.authenticate('local', {
         failureRedirect : '/fail'   // 로그인 실패
     }), function(req, res){
+        res.setHeader('Set-Cookie', 'login=true');
         res.redirect('/')           // 로그인 성공
     })
 
     app.get('/fail', function(req, res){
-        res.redirect('/login')
+        res.send("<script>alert('존재하지 않는 계정입니다.'); window.location.replace('/login')</script>")
     })
 
     passport.use(new LocalStrategy({
@@ -87,14 +83,18 @@ app.listen(process.env.PORT, function() {
         })
     }));
 
-    // 로그인 확인 함수
-    function login_confrim(req, res, next){
+    // 로그인 확인 후 알림창 띄우고 로그인 페이지로 이동
+    function login_confrim_alert(req, res, next){
         if(req.user){
             next()
         } else {
-            res.send("<script>alert('로그인 해주세요.')</script>")
+            res.send("<script>alert('로그인을 진행해주세요.'); window.location.replace('/login')</script>")
         }
     }
+    
+    app.get('/write', login_confrim_alert, function(req, res){         // /write라는 URL를 추가해서 접속하면 밑에 있는 코드를 실행
+        res.render('write.ejs')  // write.ejs파일을 띄운다.
+    });
 
     // 사용자 정보를 세션에 아이디로 저장
     passport.serializeUser(function (user, done) {
@@ -131,7 +131,7 @@ app.listen(process.env.PORT, function() {
     // 회원가입 - end
 
     // 게시물 추가
-    app.post('/add', login_confrim, function(req, res){
+    app.post('/add', login_confrim_alert, function(req, res){
         
         req.user.nick_name
         db.collection('Work_ID').findOne({name : '게시물갯수'}, function(error, 결과){  // 데이터 ID 콜렉션 찾아옴
@@ -149,7 +149,7 @@ app.listen(process.env.PORT, function() {
     }); 
 
     // 마이페이지
-    app.get('/mypage', login_confrim, function(req, res){
+    app.get('/mypage', login_confrim_alert, function(req, res){
         res.render('my_page.ejs')
     })
 
