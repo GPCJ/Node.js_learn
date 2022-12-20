@@ -87,6 +87,15 @@ app.listen(process.env.PORT, function() {
         })
     }));
 
+    // 로그인 확인 함수
+    function login_confrim(req, res, next){
+        if(req.user){
+            next()
+        } else {
+            res.send("<script>alert('로그인 해주세요.')</script>")
+        }
+    }
+
     // 사용자 정보를 세션에 아이디로 저장
     passport.serializeUser(function (user, done) {
         done(null, user.nick_name)  /** 로그인 유저의 닉네임 정보를 가지고 오고 싶으면 이런식으로 user.nick_name, ID를 가져오고 싶다면 user.id 그리고 이 정보를 밑에 함수의 info라는 파라미터에 전송 */ 
@@ -122,7 +131,8 @@ app.listen(process.env.PORT, function() {
     // 회원가입 - end
 
     // 게시물 추가
-    app.post('/add', function(req, res){
+    app.post('/add', login_confrim, function(req, res){
+        
         req.user.nick_name
         db.collection('Work_ID').findOne({name : '게시물갯수'}, function(error, 결과){  // 데이터 ID 콜렉션 찾아옴
             var 총게시물갯수 = 결과.totalPost;
@@ -139,17 +149,10 @@ app.listen(process.env.PORT, function() {
     }); 
 
     // 마이페이지
-    app.get('/mypage', 로그인확인, function(req, res){
+    app.get('/mypage', login_confrim, function(req, res){
         res.render('my_page.ejs')
     })
-    
-    function 로그인확인(req, res, next){
-        if(req.user){
-            next()
-        } else {
-            res.send('로그인 해주세요')
-        }
-    }
+
 
 
     // 삭제 기능 - start
@@ -223,9 +226,9 @@ app.listen(process.env.PORT, function() {
     })
 
     
-app.use('/shop', require('./routes/shop.js'))
+app.use('/shop', require('./routes/shop.js'))        // routes -> shop.js
 
-app.use('/board', require('./routes/board.js'))
+app.use('/board/sub', require('./routes/board.js'))  // routes -> board.js
     
 
 
