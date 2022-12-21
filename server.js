@@ -21,18 +21,44 @@ db = client.db('Node_learn');
 app.listen(process.env.PORT, function() {
     console.log('listening on 8080')
 })
+
+    // multer 세팅
+    let multer = require('multer');
+    var storage = multer.diskStorage({
+        destination : function(req, file, cb){
+            cb(null, './public/images')
+        },
+        filename : function(req, file, cb){
+            cb(null, file.originalname)     // 파일명 그대로 저장
+        }
+    });
+
+    var upload = multer({storage : storage});
+
+
+    // 파일 업로드 - start
+    app.get('/upload', function(req, res){
+        res.render('upload.ejs')
+    })
+    
+    app.post('/upload', upload.single('img'), function(req, res){   // 여러 개의 파일을 받고 싶으면 single을 array로 변경해야 하고 html파일에서 input 태그 부분에 속성들을 변경해야 한다.
+        res.send('업로드 완료')
+    })
+    // 파일 업로드 - end
+
+
+    // 렌딩페이지
+    app.get('/', function(req, res){         // req(request) = 요청, res(response) = 응답
+        res.render('Home.ejs')               // Home.ejs파일을 띄운다, Home.ejs로 메인 페이지로 한다 여기서 이후에 만들 모든 페이지로 이동하게 만들 예정
+    });
+    
+    // 목록 페이지
     app.get('/list', function(req, res){      // 할일 목록 페이지
         db.collection('post').find().toArray(function(error, 결과){    // DB에서 데이터를 가져옴
             console.log(결과);
             res.render('list.ejs', { posts : 결과 });                  // ejs파일에 데이터를 불러옴
         });             
     });
-
-
-    app.get('/', function(req, res){              // req(request) = 요청, res(response) = 응답
-        res.render('Home.ejs')  // Home.ejs파일을 띄운다, Home.ejs로 메인 페이지로 한다 여기서 이후에 만들 모든 페이지로 이동하게 만들 예정
-    });
-
 
     // session방식 로그인 구현
     const passport = require('passport');

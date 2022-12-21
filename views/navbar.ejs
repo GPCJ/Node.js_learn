@@ -8,10 +8,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="/write">Work_Write</a>
+            <a class="nav-link" href="/write">할일 작성</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/list">Work_List</a>
+            <a class="nav-link" href="/list">할일 목록</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/upload">파일 업로드</a>
           </li>
         </ul>
           <button type="button" class="btn btn-info px-3 py-1 text-end" onclick = "location.href = '/login' ">Login</button>
@@ -19,6 +22,8 @@
       </div>
     </div>
   </nav>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
   <script>
     if ($.cookie('name') == 'True'){
